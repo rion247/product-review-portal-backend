@@ -1,0 +1,22 @@
+import eslintReact from "@eslint-react/eslint-plugin";
+import js from "@eslint/js";
+import { defineConfig } from "eslint/config";
+import globals from "globals";
+import tseslint from "typescript-eslint";
+
+export default defineConfig([
+  { files: ["**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"], plugins: { js }, extends: ["js/recommended"], languageOptions: { globals: globals.node } },
+  tseslint.configs.recommended,
+  eslintReact.configs["recommended-typescript"],{
+    ignores: ["node_modules", "dist"],
+    rules: {
+      "no-unused-vars": "error",
+      "no-unused-expressions": "error",
+      "prefer-const": "error",
+      "no-console": "warn",
+      "no-undef": "error",
+    },globals : {
+      "process": "readonly",
+    }
+  },
+]);
