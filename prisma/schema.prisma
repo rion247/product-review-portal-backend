@@ -5,7 +5,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -13,19 +12,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Account {
+model Authentication {
   id                  String      @id @default(uuid())
   email               String      @unique
   password            String
   role                UserRole
-  needsPasswordChange Boolean     @default(true)
+  passwordChangedAt DateTime
   status              UserStatus  @default(ACTIVE)
   createdAt           DateTime    @default(now())
   updatedAt           DateTime    @updatedAt
   superAdmin          SuperAdmin?
   admin               Admin?
 
-  @@map("accounts")
+  @@map("authentications")
 }
 
 enum UserRole {
@@ -51,7 +50,7 @@ model SuperAdmin {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
-  account Account @relation(fields: [email], references: [email])
+  account Authentication @relation(fields: [email], references: [email])
 
   @@map("superAdmins")
 }
@@ -68,7 +67,7 @@ model Admin {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
-  account Account @relation(fields: [email], references: [email])
+  account Authentication @relation(fields: [email], references: [email])
 
   @@map("admins")
 }
