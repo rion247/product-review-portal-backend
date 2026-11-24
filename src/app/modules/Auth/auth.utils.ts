@@ -7,7 +7,7 @@ export const isUserPasswordMatched = async (
   return await bcrypt.compare(plainText, hashText);
 };
 
-export const isUserPasswordIssuedBeforeJWTToken = (
+export const isTokenIssuedBeforePasswordChange = (
   passwordTimeStamp: Date,
   jwtIssuedTimeStamp: number,
 ): boolean => {

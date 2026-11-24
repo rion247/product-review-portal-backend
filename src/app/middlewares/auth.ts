@@ -10,7 +10,7 @@ import catchAsync from '../../shared/catchAsync';
 import prisma from '../../shared/prisma';
 import config from '../config';
 import APIError from '../errors/APIError';
-import { isUserPasswordIssuedBeforeJWTToken } from '../modules/Auth/auth.utils';
+import { isTokenIssuedBeforePasswordChange } from '../modules/Auth/auth.utils';
 
 const auth = (...requiredRoles: UserRole[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -60,7 +60,7 @@ const auth = (...requiredRoles: UserRole[]) => {
 
     if (
       userData?.passwordChangedAt &&
-      isUserPasswordIssuedBeforeJWTToken(
+      isTokenIssuedBeforePasswordChange(
         userData?.passwordChangedAt,
         iat as number,
       )
