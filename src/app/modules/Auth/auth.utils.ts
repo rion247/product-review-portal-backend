@@ -1,4 +1,14 @@
 import bcrypt from 'bcrypt';
+import config from '../../config';
+
+export const passwordHashed = async (
+  plainTextPassword: string,
+): Promise<string> => {
+  return await bcrypt.hash(
+    plainTextPassword,
+    Number(config.bcrypt_salt_rounds),
+  );
+};
 
 export const isUserPasswordMatched = async (
   plainText: string,

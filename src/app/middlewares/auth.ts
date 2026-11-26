@@ -39,7 +39,7 @@ const auth = (...requiredRoles: UserRole[]) => {
 
     const { email, role, iat } = decoded;
 
-    const userData = await prisma.authentication.findUnique({
+    const userData = await prisma.account.findUnique({
       where: {
         email,
       },

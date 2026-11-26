@@ -12,19 +12,21 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Authentication {
-  id                  String      @id @default(uuid())
-  email               String      @unique
-  password            String
-  role                UserRole
-  passwordChangedAt DateTime
-  status              UserStatus  @default(ACTIVE)
-  createdAt           DateTime    @default(now())
-  updatedAt           DateTime    @updatedAt
-  superAdmin          SuperAdmin?
-  admin               Admin?
+model Account {
+  id                String      @id @default(uuid())
+  email             String      @unique
+  password          String
+  role              UserRole
+  passwordChangedAt DateTime?
+  status            UserStatus  @default(ACTIVE)
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+  superAdmin        SuperAdmin?
+  admin             Admin?
+  user              User?
+  reviews           Review[]
 
-  @@map("authentications")
+  @@map("accounts")
 }
 
 enum UserRole {
@@ -50,7 +52,7 @@ model SuperAdmin {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
-  account Authentication @relation(fields: [email], references: [email])
+  account Account @relation(fields: [email], references: [email])
 
   @@map("superAdmins")
 }
@@ -67,12 +69,110 @@ model Admin {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
-  account Authentication @relation(fields: [email], references: [email])
+  account    Account    @relation(fields: [email], references: [email])
+  categories Category[]
 
   @@map("admins")
+}
+
+model User {
+  id            String   @id @default(uuid())
+  name          Json
+  email         String   @unique
+  gender        Gender
+  address       String
+  contactNumber String
+  profilePhoto  String?
+  isDeleted     Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  account  Account   @relation(fields: [email], references: [email])
+  payment  Payment[]
+  comments Comment[]
+
+  @@map("users")
 }
 
 enum Gender {
   MALE
   FEMALE
+}
+
+model Category {
+  id        String   @id @default(uuid())
+  adminId   String
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  admin  Admin    @relation(fields: [adminId], references: [id])
+  review Review[]
+
+  @@map("categories")
+}
+
+enum ReviewStatus {
+  PENDING
+  PUBLISHED
+  UNPUBLISHED
+}
+
+model Review {
+  id               String       @id @default(uuid())
+  title            String
+  description      String
+  rating           Int
+  purchaseSource   String?
+  images           String[]
+  isPremium        Boolean      @default(false)
+  price            Float?       @default(0)
+  reviewStatus     ReviewStatus @default(PENDING)
+  moderationReason String?
+  categoryId       String
+  email            String
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  category Category  @relation(fields: [categoryId], references: [id])
+  account  Account   @relation(fields: [email], references: [email])
+  payment  Payment[]
+  comments Comment[]
+
+  @@map("reviews")
+}
+
+enum PaymentStatus {
+  PAID
+  UNPAID
+}
+
+model Payment {
+  reviewId      String
+  userId        String
+  amount        Float
+  transactionId String        @unique
+  paymentStatus PaymentStatus @default(UNPAID)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  review Review @relation(fields: [reviewId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@id([reviewId, userId])
+  @@map("payments")
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  reviewId  String
+  userId    String
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  review Review @relation(fields: [reviewId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@map("comments")
 }
