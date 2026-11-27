@@ -29,8 +29,12 @@ export default {
   ssl_commerz_generate_transaction_api:
     process.env.SSL_COMMERZ_GENERATE_TRANSACTION_API,
   ssl_commerz_validation_api: process.env.SSL_COMMERZ_VALIDATION_API,
-  super_admin_name: process.env.SUPER_ADMIN_NAME,
+  super_admin_first_name: process.env.SUPER_ADMIN_FIRST_NAME,
+  super_admin_middle_name: process.env.SUPER_ADMIN_MIDDLE_NAME,
+  super_admin_last_name: process.env.SUPER_ADMIN_LAST_NAME,
   super_admin_contact_number: process.env.SUPER_ADMIN_CONTACT_NUMBER,
+  super_admin_gender: process.env.SUPER_ADMIN_GENDER,
+  super_admin_address: process.env.SUPER_ADMIN_ADDRESS,
   super_admin_email: process.env.SUPER_ADMIN_EMAIL,
   super_admin_password: process.env.SUPER_ADMIN_PASSWORD,
   super_admin_profile_photo: process.env.SUPER_ADMIN_PROFILE_PHOTO,

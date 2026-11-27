@@ -1,10 +1,10 @@
-type TName = {
+export type TName = {
   firstName: string;
   middleName?: string;
   lastName: string;
 };
 
-type TGender = 'MALE' | 'FEMALE';
+export type TGender = 'MALE' | 'FEMALE';
 
 export type TSuperAdmin = {
   name: TName;
@@ -13,4 +13,5 @@ export type TSuperAdmin = {
   address: string;
   contactNumber: string;
   profilePhoto?: string;
+  isDeleted?: boolean;
 };
